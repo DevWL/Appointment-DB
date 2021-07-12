@@ -53,7 +53,7 @@ SELECT '' AS '';
 SELECT @s AS 'start date',  @e as 'end date';
 
 SELECT 'Appointments table - before insert:' AS ' ';
-SELECT a.id, c.name, c.phone, s.service, a.starts_at, a.ends_at 
+SELECT a.id, c.name, c.phone, s.name, a.starts_at, a.ends_at 
 FROM Appointments a 
 LEFT JOIN
     Clients c ON a.client_id = c.id
@@ -96,15 +96,16 @@ INSERT INTO Appointments
         (starts_at <= @s AND @s < ends_at)
         OR (starts_at < @e AND @e <= ends_at)
         OR (@s <= starts_at AND starts_at < @e)
+        LIMIT 1 
         )
-    AND EXISTS (SELECT id FROM Schedules WHERE 1 = 1)
+    AND EXISTS (SELECT id FROM Schedule WHERE WEEKDAY(@s) + 1 = day and @s >= starts_at and @e <= ends_at)
     LIMIT 1 -- micro optimisation
 ;
 
 -- WHERE ESISTS ( SELECT id FROM Appointments WHERE (starts_at >= @e AND starts_at > @s AND ends_at > @s AND ends_at > @e)
 
 SELECT 'Appointments table - after insert:' AS ' ';
-SELECT a.id, c.name, c.phone, s.service, a.starts_at, a.ends_at 
+SELECT a.id, c.name, c.phone, s.name, a.starts_at, a.ends_at 
 FROM Appointments a 
 LEFT JOIN
     Clients c ON a.client_id = c.id
