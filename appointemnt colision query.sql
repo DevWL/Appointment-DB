@@ -97,8 +97,8 @@ INSERT INTO Appointments
         OR (starts_at < @e AND @e <= ends_at)
         OR (@s <= starts_at AND starts_at < @e)
         )
-        AND EXISTS (SELECT id FROM Schedules WHERE 1 = 1)
-        LIMIT 1 -- micro optimisation
+    AND EXISTS (SELECT id FROM Schedules WHERE 1 = 1)
+    LIMIT 1 -- micro optimisation
 ;
 
 -- WHERE ESISTS ( SELECT id FROM Appointments WHERE (starts_at >= @e AND starts_at > @s AND ends_at > @s AND ends_at > @e)
